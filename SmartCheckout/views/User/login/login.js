@@ -12,6 +12,10 @@ export default class LoginScreen extends Component {
     error:null,
     navigate:null
   };
+  static navigationOptions = {
+    title: "LogIn",
+  };
+
   componentDidMount()
   {
     const {navigate}=this.props.navigation;
@@ -39,6 +43,11 @@ export default class LoginScreen extends Component {
               buttonStyle={styles.loginButton}
               onPress={() => this.onLoginPress()}
               title="Login"
+            />
+            <Button
+              buttonStyle={styles.registerButton}
+              onPress={() =>  this.state.navigate('Register')}
+              title="Register"
             />
           </View>
         </View>
@@ -68,7 +77,7 @@ export default class LoginScreen extends Component {
     Axios.post('https://smartcheckoutbackend.herokuapp.com/api/user/login',data)
     .then(res=>{
       console.log(res.data.token);
-      this.state.navigate('Barcode',{
+      this.state.navigate('HomeScreen',{
         user:res.data.data,
         token:res.data.token
       });
