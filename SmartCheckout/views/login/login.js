@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import styles from "./style";
 import {Keyboard, Text, View, TextInput, TouchableWithoutFeedback, Alert, KeyboardAvoidingView} from 'react-native';
 import { Button } from 'react-native-elements';
@@ -10,8 +9,14 @@ export default class LoginScreen extends Component {
   state={
     email:null,
     password:null,
-    error:null
+    error:null,
+    navigate:null
   };
+  componentDidMount()
+  {
+    const {navigate}=this.props.navigation;
+    this.setState({navigate});
+  }
   render() {
     return (
       <KeyboardAvoidingView style={styles.containerView} behavior="padding">
@@ -56,11 +61,18 @@ export default class LoginScreen extends Component {
     }
   }
   onLoginPress() {
-    Axios.post('http://localhost:8080/api/user/login')
-    .then(res=>{
-      console.log(res)
-    })
-    .catch(error=>{console.log(error)});
+    // Axios.post('http://localhost:8080/api/user/login')
+    // .then(res=>{
+    //   console.log(res)
+    // })
+    // .catch(error=>{console.log(error)});
+    console.log("logging in");
+    if(this.state.email && this.state.password && !this.state.error)
+      this.state.navigate('Barcode');
+    else
+    {
+      alert("please log in correctly")
+    }
   }
 
 }
