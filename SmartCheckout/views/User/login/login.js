@@ -61,18 +61,24 @@ export default class LoginScreen extends Component {
     }
   }
   onLoginPress() {
-    // Axios.post('http://localhost:8080/api/user/login')
-    // .then(res=>{
-    //   console.log(res)
-    // })
-    // .catch(error=>{console.log(error)});
-    console.log("logging in");
-    if(this.state.email && this.state.password && !this.state.error)
-      this.state.navigate('Barcode');
-    else
-    {
-      alert("please log in correctly")
-    }
+    const data = {
+        email:this.state.email,
+        password:this.state.password
+      }
+    Axios.post('https://smartcheckoutbackend.herokuapp.com/api/user/login',data)
+    .then(res=>{
+      console.log(res.data.token);
+      this.state.navigate('Barcode',{
+        user:res.data.data,
+        token:res.data.token
+      });
+    })
+    .catch(error=>{
+        const err= error.response.data.message||error.response.data.msg
+        console.log(err);
+        this.setState({error:err});
+        alert(this.state.error)
+      });
   }
 
 }
