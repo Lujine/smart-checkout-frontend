@@ -49,13 +49,13 @@ export default class Profile extends React.Component {
       <ScrollView style={styles.container}>
         <Text style={styles.title}>
           Hello {this.props.navigation.state.params.user.name.first} {this.props.navigation.state.params.user.name.last}
-
-          
         </Text>
-
+        <Button title="Stores" onPress={()=>this.props.navigation.navigate("Stores",{user:this.props.navigation.state.params.user})} />          
       </ScrollView>
-    );
+        );
   }
+
+
 }
 
 const styles = StyleSheet.create({

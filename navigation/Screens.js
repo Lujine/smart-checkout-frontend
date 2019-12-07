@@ -8,6 +8,7 @@ import Barcode from '../views/Barcode';
 import Login from '../views/User/login/login'
 import Register from '../views/User/register/register'
 import Profile from '../views/User/profile/profile'
+import Store from '../views/Store/stores'
 // import ComponentsScreen from '../screens/Components';
 // import HomeScreen from '../screens/Home';
 // import OnboardingScreen from '../screens/Onboarding';
@@ -71,6 +72,13 @@ const HomeStack = createStackNavigator({
   },
   Profile:{
     screen: Profile,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
+      headerTransparent: true,
+    }),
+  },
+  Stores:{
+    screen: Store,
     navigationOptions: ({ navigation }) => ({
       header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
       headerTransparent: true,
