@@ -4,7 +4,7 @@ import {Keyboard, Text, View, TextInput, TouchableWithoutFeedback, Alert, Keyboa
 import { Button } from 'react-native-elements';
 import Axios from 'axios';
 
-export default class LoginScreen extends Component {
+export default class RegisterScreen extends Component {
 
   state={
     email:null,

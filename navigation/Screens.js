@@ -6,6 +6,7 @@ import { createDrawerNavigator } from 'react-navigation-drawer'
 import { Block, Text, theme } from "galio-framework";
 import Barcode from '../views/Barcode';
 import Login from '../views/User/login/login'
+import Register from '../views/User/Register/register'
 
 // import ComponentsScreen from '../screens/Components';
 // import HomeScreen from '../screens/Home';
@@ -56,6 +57,19 @@ const transitionConfig = (transitionProps, prevTransitionProps) => ({
 const LoginStack = createStackNavigator({
   Home: {
     screen: Login,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
+      headerTransparent: true,
+    })
+  },
+}, {
+  cardStyle: { backgroundColor: '#EEEEEE', },
+  transitionConfig,
+});
+
+const RegisterStack = createStackNavigator({
+  Home: {
+    screen: Register,
     navigationOptions: ({ navigation }) => ({
       header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
       headerTransparent: true,
@@ -153,6 +167,14 @@ const AppStack = createDrawerNavigator(
       navigationOptions: {
         drawerLabel: ({focused}) => (
           <Drawer focused={focused} screen="Barcode" title="Barcode" />
+        )
+      }
+    },
+    Register: {
+      screen: RegisterStack,
+      navigationOptions: {
+        drawerLabel: ({focused}) => (
+          <Drawer focused={focused} screen="Register" title="Register" />
         )
       }
     },
