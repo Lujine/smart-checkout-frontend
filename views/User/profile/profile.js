@@ -7,7 +7,7 @@ import {
   Button,
 } from "react-native";
 
-export default class HomeScreen extends React.Component {
+export default class Profile extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: `  My Profile`,
     headerLeft: () => {
@@ -42,10 +42,6 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({
-    });
-    const {navigate}=this.props.navigation;
-    this.setState({navigate});
   }
 
   render() {
