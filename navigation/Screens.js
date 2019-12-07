@@ -5,7 +5,7 @@ import { createStackNavigator} from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { Block, Text, theme } from "galio-framework";
 import Barcode from '../views/Barcode';
-import Login from '../views/login/login'
+import Login from '../views/User/login/login'
 
 // import ComponentsScreen from '../screens/Components';
 // import HomeScreen from '../screens/Home';
