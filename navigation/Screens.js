@@ -6,7 +6,7 @@ import { createDrawerNavigator } from 'react-navigation-drawer'
 import { Block, Text, theme } from "galio-framework";
 import Barcode from '../views/Barcode';
 import Login from '../views/User/login/login'
-import Register from '../views/User/Register/register'
+import Register from '../views/User/register/register'
 
 // import ComponentsScreen from '../screens/Components';
 // import HomeScreen from '../screens/Home';
@@ -54,8 +54,39 @@ const transitionConfig = (transitionProps, prevTransitionProps) => ({
   }
 })
 
-const LoginStack = createStackNavigator({
-  Home: {
+const HomeStack = createStackNavigator({
+  LogIn: {
+    screen: Login,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
+      headerTransparent: true,
+    })
+  },
+  Register: {
+    screen: Register,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
+      headerTransparent: true,
+    }) 
+  }
+}, 
+{
+  initialRouteName: 'LogIn',
+},
+{
+  cardStyle: { backgroundColor: '#EEEEEE', },
+  transitionConfig,
+});
+
+const RegisterStack = createStackNavigator({
+  Register: {
+    screen: Register,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
+      headerTransparent: true,
+    })
+  },
+  LogIn: {
     screen: Login,
     navigationOptions: ({ navigation }) => ({
       header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
@@ -67,27 +98,21 @@ const LoginStack = createStackNavigator({
   transitionConfig,
 });
 
-const RegisterStack = createStackNavigator({
-  Home: {
-    screen: Register,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
-      headerTransparent: true,
-    })
-  },
-}, {
-  cardStyle: { backgroundColor: '#EEEEEE', },
-  transitionConfig,
-});
-
 const BarcodeStack = createStackNavigator({
-  Home: {
+  Barcode: {
     screen: Barcode,
     navigationOptions: ({ navigation }) => ({
       header: <Header white transparent title="Scan your Barcode" navigation={navigation} />,
       headerTransparent: true,
     })
   },
+  LogIn: {
+    screen: Login,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
+      headerTransparent: true,
+    })
+  }
 }, {
   cardStyle: { backgroundColor: '#EEEEEE', },
   transitionConfig,
@@ -155,10 +180,10 @@ const BarcodeStack = createStackNavigator({
 const AppStack = createDrawerNavigator(
   {
     Home: {
-      screen: LoginStack,
+      screen: HomeStack,
       navigationOptions: {
         drawerLabel: ({focused}) => (
-          <Drawer focused={focused} screen="Home" title="Home" />
+          <Drawer focused={focused} screen="Login" title="Login" />
         )
       }
     },
