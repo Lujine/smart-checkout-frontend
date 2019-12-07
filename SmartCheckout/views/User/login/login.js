@@ -12,6 +12,10 @@ export default class LoginScreen extends Component {
     error:null,
     navigate:null
   };
+  static navigationOptions = {
+    title: "LogIn",
+  };
+
   componentDidMount()
   {
     const {navigate}=this.props.navigation;
@@ -40,6 +44,11 @@ export default class LoginScreen extends Component {
               onPress={() => this.onLoginPress()}
               title="Login"
             />
+            <Button
+              buttonStyle={styles.registerButton}
+              onPress={() =>  this.state.navigate('Register')}
+              title="Register"
+            />
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -61,18 +70,23 @@ export default class LoginScreen extends Component {
     }
   }
   onLoginPress() {
-    // Axios.post('http://localhost:8080/api/user/login')
-    // .then(res=>{
-    //   console.log(res)
-    // })
-    // .catch(error=>{console.log(error)});
-    console.log("logging in");
-    if(this.state.email && this.state.password && !this.state.error)
-      this.state.navigate('Barcode');
-    else
-    {
-      alert("please log in correctly")
-    }
+    const data = {
+        email:this.state.email,
+        password:this.state.password
+      }
+    Axios.post('https://smartcheckoutbackend.herokuapp.com/api/user/login',data)
+    .then(res=>{
+      this.state.navigate('Profile',{
+        user:res.data.data,
+        token:res.data.token,
+      });
+    })
+    .catch(error=>{
+        const err= error.response.data.message||error.response.data.msg
+        console.log(err);
+        this.setState({error:err});
+        alert(this.state.error)
+      });
   }
 
 }

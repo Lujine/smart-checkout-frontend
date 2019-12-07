@@ -7,10 +7,20 @@ export default class Barcode extends React.Component {
   state = {
     hasCameraPermission: null,
     scanned: false,
+    user:null,
+    token:null
+  };
+  static navigationOptions = {
+    title: "CashMeOutside",
   };
 
   async componentDidMount() {
     this.getPermissionsAsync();
+    console.log(this.props.navigation.state.params)
+    this.setState({
+      user:this.props.navigation.state.params.user,
+      token:this.props.navigation.state.params.token,
+    });
   }
 
   getPermissionsAsync = async () => {
