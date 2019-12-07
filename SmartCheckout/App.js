@@ -1,13 +1,29 @@
-import Barcode from './views/Barcode';
-import Login from './views/login/login'
-import {createAppContainer} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
+import React from 'react';
+import { Platform, StatusBar, /*Image*/ } from 'react-native';
+// import { AppLoading } from 'expo';
+// import { Asset } from 'expo-asset';
+import { Block, GalioProvider } from 'galio-framework';
 
-const MainNavigator = createStackNavigator({
-  Home: {screen: Login},
-  Barcode: {screen: Barcode},
-});
+import AppContainer from './navigation/Screens';
+import { materialTheme } from './constants/';
 
-const App = createAppContainer(MainNavigator);
+export default class App extends React.Component {
+  state = {
+    isLoadingComplete: false,
+  };
 
-export default App;
+  render() {
+    return (
+      <GalioProvider theme={materialTheme}>
+        <Block flex>
+          {Platform.OS === 'android' && <StatusBar barStyle="default" />}
+          <AppContainer />
+        </Block>
+      </GalioProvider>
+    );
+  };
+
+  _handleFinishLoading = () => {
+    this.setState({ isLoadingComplete: true });
+  };
+};
