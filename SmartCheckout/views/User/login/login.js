@@ -76,10 +76,9 @@ export default class LoginScreen extends Component {
       }
     Axios.post('https://smartcheckoutbackend.herokuapp.com/api/user/login',data)
     .then(res=>{
-      console.log(res.data.token);
-      this.state.navigate('HomeScreen',{
+      this.state.navigate('Profile',{
         user:res.data.data,
-        token:res.data.token
+        token:res.data.token,
       });
     })
     .catch(error=>{

@@ -4,12 +4,12 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Button,
 } from "react-native";
-import FastImage from "react-native-fast-image";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "Home",
+    title: `  My Profile`,
     headerLeft: () => {
       return (
         <TouchableOpacity
@@ -17,19 +17,17 @@ export default class HomeScreen extends React.Component {
             navigation.openDrawer();
           }}
         >
-          {/* {navigation.state.params && navigation.state.params.menuIcon ? (
-            <FastImage
-              style={styles.userPhoto}
-              resizeMode={FastImage.resizeMode.cover}
-              source={{ uri: navigation.state.params.menuIcon }}
-            />
-          ) : (
-            <FastImage
-              style={styles.userPhoto}
-              resizeMode={FastImage.resizeMode.cover}
-              source={AppIcon.images.defaultUser}
-            />
-          )} */}
+        </TouchableOpacity>
+      );
+    },
+    headerRight: () => {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.openDrawer();
+          }}
+        >
+        <Button title="logout" onPress={()=>navigation.navigate("Home")} />
         </TouchableOpacity>
       );
     }
@@ -39,19 +37,26 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = {
       activeSlide: 0,
+      navigate:null,
     };
   }
 
   componentDidMount() {
     this.props.navigation.setParams({
-      //menuIcon: this.props.user.profileURL
     });
+    const {navigate}=this.props.navigation;
+    this.setState({navigate});
   }
 
   render() {
     return (
       <ScrollView style={styles.container}>
-        <Text style={styles.title}>Welcome User</Text>
+        <Text style={styles.title}>
+          Hello {this.props.navigation.state.params.user.name.first} {this.props.navigation.state.params.user.name.last}
+
+          
+        </Text>
+
       </ScrollView>
     );
   }
