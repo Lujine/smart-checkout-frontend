@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Button,
   AsyncStorage,
+  View,
 } from "react-native";
 import { Card } from "galio-framework";
 import { ListItem } from "react-native-elements";
@@ -68,7 +69,7 @@ export default class Profile extends React.Component {
             My Cart
         </Text>
           <ScrollView style={styles.container}>
-            <Text style={styles.title}>
+            <Text>
               Items
           </Text>
 
@@ -76,13 +77,26 @@ export default class Profile extends React.Component {
               {
                 user.shoppingCart.itemsSelected.map((item, i) => {
                   return (
-                    <ListItem
-                      key={i}
-                      title={item.name}
-                      onPress={() => {
-
+                    <View>
+                      <Text>{item.name}</Text>
+                      <Button 
+                      title="delete Item"
+                      onPress={()=>{
+                        Axios.delete(`https://smartcheckoutbackend.herokuapp.com/api/user/${user._id}/cart/item/${item._id}`)
+                        .then(res=>{
+                          console.log(res.data.data)
+                          alert('deleted item succesfuly')
+                        })
+                        .catch(error=>{
+                          console.log(error)
+                          const err = error.response.data.message || error.response.data.msg
+                          console.log(err);
+                          this.setState({ error: err });
+                          alert(this.state.error)
+                        })
                       }}
-                    />
+                      />
+                    </View>
                   );
                 })
               }
@@ -122,7 +136,9 @@ export default class Profile extends React.Component {
       );
     }
     return (
-      <Text> Loading </Text>
+      <View>
+      <Text style={styles.title}> Loading please wait </Text>
+      </View>
     )
   }
 
