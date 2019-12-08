@@ -84,6 +84,14 @@ const HomeStack = createStackNavigator({
       headerTransparent: true,
     }),
   },
+  Barcode:{
+    screen: Barcode,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header white transparent title="Scan your Item" navigation={navigation} />,
+      headerTransparent: true,
+    }),
+  },
+
 }, 
 {
   initialRouteName: 'LogIn',

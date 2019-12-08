@@ -8,7 +8,8 @@ export default class Barcode extends React.Component {
     hasCameraPermission: null,
     scanned: false,
     user:null,
-    token:null
+    token:null,
+    storeId:"",
   };
   static navigationOptions = {
     title: "CashMeOutside",
@@ -16,10 +17,10 @@ export default class Barcode extends React.Component {
 
   async componentDidMount() {
     this.getPermissionsAsync();
-    console.log(this.props.navigation.state.params)
     this.setState({
       user:this.props.navigation.state.params.user,
       token:this.props.navigation.state.params.token,
+      storeId:this.props.navigation.state.params.storeId
     });
   }
 
