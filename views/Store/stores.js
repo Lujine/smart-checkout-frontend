@@ -112,12 +112,19 @@ export default class Stores extends React.Component {
                     <Text>Phone Number: {this.state.store.phoneNumber}</Text>
                     <Button title="Start Shopping" 
                     onPress={()=>{
-                        //toDo check if we need to prompt the user for deletion of cart
+                        if(this.props.navigation.state.params.user.shoppingCart.store===this.state.store._id)
+                        {
+                          this.props.navigation.navigate("Barcode",{
+                            user:this.props.navigation.state.params.user,
+                            storeId:this.state.store._id
+                          })
+                        }
+                        else
+                        {
+                          alert("the store you're going to shop from is different than your current cart, doing this will delete your cart")
+                        }  
 
-                        this.props.navigation.navigate("Barcode",{
-                        user:this.props.navigation.state.params.user,
-                        storeId:this.state.storeId
-                    })}
+                  }
                 }
                     />
                 </View>
