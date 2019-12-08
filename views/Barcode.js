@@ -112,7 +112,7 @@ export default class Barcode extends React.Component {
                })
                       .then(res=>{
                         console.log(res.data.data)
-                        alert("added to cart!")
+                        alert("added to Store!")
                       })
                       .catch(error=>{
                         const err= error.response.data.message||error.response.data.msg
@@ -141,12 +141,13 @@ export default class Barcode extends React.Component {
                    <Button title={"Add to Cart"} 
                     onPress={()=>{
                       //toDo call route to add to cart
-                      Axios.post(`/${userId}/cart/item`, this.state.item)
+                      Axios.post(`https://smartcheckoutbackend.herokuapp.com/api/user/${userId}/cart/item`, this.state.item)
                       .then(res=>{
                         console.log(res.data.data)
-                        alert("added to cart!")
+                        alert("added to cart!") 
                       })
                       .catch(error=>{
+                        console.log(error)
                         const err= error.response.data.message||error.response.data.msg
                         console.log(err);
                         this.setState({error:err});
