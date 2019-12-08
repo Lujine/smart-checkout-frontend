@@ -136,20 +136,24 @@ export default class LoginScreen extends Component {
       email: this.state.email,
       password: this.state.password
     }
-    const res = await Axios.post('https://smartcheckoutbackend.herokuapp.com/api/user/login', data)
-  
-      if (res.error) {
-        const err = error.response.data.message || error.response.data.msg
-        console.log(err);
-        this.setState({ error: err });
-        alert(this.state.error)
-      }
-
-      // console.log(res)
+    console.log('logging in please wait!')
+    try
+    {
+      const res = await Axios.post('https://smartcheckoutbackend.herokuapp.com/api/user/login', data)
       await AsyncStorage.setItem('user', JSON.stringify(res.data.data));
       await AsyncStorage.setItem('token', res.data.token);
       console.log('Gonna navigate yaay')
       this.props.navigation.navigate('Drawer');
+   
+    }
+    catch(error)
+    {
+      const err = error.response.data.message || error.response.data.msg
+      console.log(err);
+      this.setState({ error: err });
+      alert(this.state.error)
+    }
+  
   }
 
 }

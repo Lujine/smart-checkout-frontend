@@ -116,7 +116,7 @@ export default class Profile extends React.Component {
 
             </Card>
           </ScrollView>
-          <Button title="Stores" onPress={() => this.props.navigation.navigate("Stores")} />
+          <Button title="Stores" onPress={() => this.props.navigation.navigate("Store")} />
 
         </ScrollView>
       );

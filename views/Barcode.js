@@ -13,8 +13,8 @@ export default class Barcode extends React.Component {
   state = {
     hasCameraPermission: null,
     scanned: false,
-    user: null,
-    token: null,
+    user: {},
+    token: "",
     storeId: "",
     item: {},
     adminVis: false,
@@ -22,7 +22,7 @@ export default class Barcode extends React.Component {
     itemName: "",
     itemPrice: 0,
     itemDiscount: 0,
-    loading: false
+    loading: true
   };
   static navigationOptions = {
     title: "CashMeOutside",
@@ -39,7 +39,7 @@ export default class Barcode extends React.Component {
       user,
       token,
       storeId,
-      loading: true
+      loading: false
     });
   }
 
@@ -50,7 +50,7 @@ export default class Barcode extends React.Component {
 
   render() {
     const { hasCameraPermission, scanned, user } = this.state;
-     
+    
     if (hasCameraPermission === null) {
       return <Text>Requesting for camera permission</Text>;
     }
@@ -58,7 +58,7 @@ export default class Barcode extends React.Component {
       return <Text>No access to camera</Text>;
     }
 
-    if(loaded) {
+    if(!this.state.loading) {
       const userId = user._id;
 
       return (
@@ -181,6 +181,7 @@ export default class Barcode extends React.Component {
       );
     }
     return (
+      
       <Text>Loading</Text>
     )
   }
@@ -188,14 +189,14 @@ export default class Barcode extends React.Component {
   handleBarCodeScanned = async ({ type, data }) => {
     const storeId = await AsyncStorage.getItem('storeId')
     //alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    console.log(data)
     Axios.get(`https://smartcheckoutbackend.herokuapp.com/api/store/${storeId}/items/${data}`)
       .then(res => {
         this.setState({
           item: res.data.data
         })
         this.setState({ scanned: true });
-        const user = user;
-        if (user.isAdmin)
+        if (this.state.user.isAdmin)
           this.setState({ adminVis: true })
         else {
           this.setState({ userVis: true })

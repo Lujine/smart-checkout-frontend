@@ -48,7 +48,8 @@ export default class Stores extends React.Component {
       stores:[],
       storeId:"",
       chosen:false,
-      store:null,
+      store:{},
+      user:{}
 
     };
   }
@@ -63,6 +64,11 @@ export default class Stores extends React.Component {
         console.log(err);
         this.setState({error:err});
         alert(this.state.error)
+      })
+      AsyncStorage.getItem('user')
+      .then(stringUser=>{
+        const user= JSON.parse(stringUser)
+        this.setState({user})
       })
   }
 
@@ -82,6 +88,7 @@ export default class Stores extends React.Component {
                   roundAvatar
                   title={store.name}
                   onPress={()=>{
+                    console.log(store)
                       Axios.get(`https://smartcheckoutbackend.herokuapp.com/api/store/${store._id}`)
                       .then(res=>{
                             this.setState({store:res.data.data})
@@ -103,13 +110,11 @@ export default class Stores extends React.Component {
           );
   }
 
-  getStore= async () =>{
-    const stringUser = await AsyncStorage.getItem('user')
-    const user = JSON.parse(stringUser);
-    return (
+  getStore=  () =>{
+     const {user} = this.state;
+      return (
         <ScrollView style={styles.container}>
              <Card containerStyle={{padding: 0}} >
-                <View>
                     <Text>Name: {this.state.store.name}</Text>
                     <Text>Address: {this.state.store.address}</Text>
                     <Text>Phone Number: {this.state.store.phoneNumber}</Text>
@@ -117,6 +122,7 @@ export default class Stores extends React.Component {
                     onPress={ async () => {
                         if(user.shoppingCart.store===this.state.store._id)
                         {
+                          console.log('navigating to barcode ',this.state.store._id);
                           await AsyncStorage.setItem('storeId', this.state.store._id);
                           this.props.navigation.navigate("Barcode")
                         }
@@ -125,13 +131,10 @@ export default class Stores extends React.Component {
                           alert("the store you're going to shop from is different than your current cart, doing this will delete your cart")
                         }  
 
-                  }
-                }
-                    />
-                </View>
+                  }}/>
             </Card>
         </ScrollView>
-        );
+        ); 
 }
 
   render() {
