@@ -10,4 +10,9 @@ cancelButton: {
   height: 45,
   marginTop: 10,
 },
+
+modalstyle:{
+  width:250,
+  height:150
+}
 };
