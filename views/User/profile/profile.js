@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   Button,
+  AsyncStorage,
 } from "react-native";
 
 export default class Profile extends React.Component {
@@ -38,21 +39,36 @@ export default class Profile extends React.Component {
     this.state = {
       activeSlide: 0,
       navigate:null,
+      user: {},
+      loaded: false
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    console.log('here')
+    const stringUser = await AsyncStorage.getItem('user')
+    const parsed = JSON.parse(stringUser)
+    const user = parsed
+    this.setState({user: user, loaded: true})
   }
 
   render() {
+    const { user, loaded } = this.state
+    console.log(`User2: ${user}`)
+    if(loaded) {
+      return (
+        <ScrollView style={styles.container}>
+          <Text style={styles.title}>
+            Hello
+             {user.name.first} {user.name.last}
+          </Text>
+          <Button title="Stores" onPress={()=>this.props.navigation.navigate("Stores")} />          
+        </ScrollView>
+          );
+    }
     return (
-      <ScrollView style={styles.container}>
-        <Text style={styles.title}>
-          Hello {this.props.navigation.state.params.user.name.first} {this.props.navigation.state.params.user.name.last}
-        </Text>
-        <Button title="Stores" onPress={()=>this.props.navigation.navigate("Stores",{user:this.props.navigation.state.params.user})} />          
-      </ScrollView>
-        );
+      <Text> Loading </Text>
+    )
   }
 
 

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Button,
   View,
+  AsyncStorage,
 } from "react-native";
 import {
     Card,
@@ -102,7 +103,9 @@ export default class Stores extends React.Component {
           );
   }
 
-  getStore=()=>{
+  getStore= async () =>{
+    const stringUser = await AsyncStorage.getItem('user')
+    const user = JSON.parse(stringUser);
     return (
         <ScrollView style={styles.container}>
              <Card containerStyle={{padding: 0}} >
@@ -111,13 +114,11 @@ export default class Stores extends React.Component {
                     <Text>Address: {this.state.store.address}</Text>
                     <Text>Phone Number: {this.state.store.phoneNumber}</Text>
                     <Button title="Start Shopping" 
-                    onPress={()=>{
-                        if(this.props.navigation.state.params.user.shoppingCart.store===this.state.store._id)
+                    onPress={ async () => {
+                        if(user.shoppingCart.store===this.state.store._id)
                         {
-                          this.props.navigation.navigate("Barcode",{
-                            user:this.props.navigation.state.params.user,
-                            storeId:this.state.store._id
-                          })
+                          await AsyncStorage.setItem('storeId', this.state.store._id);
+                          this.props.navigation.navigate("Barcode")
                         }
                         else
                         {

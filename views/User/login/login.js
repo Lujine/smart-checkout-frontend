@@ -11,6 +11,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  AsyncStorage,
 } from 'react-native';
 import { Button, Block, Text, Input, theme } from 'galio-framework';
 
@@ -57,6 +58,7 @@ export default class LoginScreen extends Component {
                 style={{ borderRadius: 3, borderColor: materialTheme.COLORS.INPUT }}
                 iconContent={<Icon size={16} color={theme.COLORS.ICON} name={inputInfo.icon} family="GalioExtra" />}
                 onChange={inputInfo.onChange}
+                secureTextEntry={inputInfo.secureTextEntry || false}
               />
             ))
           }
@@ -83,7 +85,7 @@ export default class LoginScreen extends Component {
                   this.renderInputs(
                     [
                       { placeholder: "email", icon: 'camera-18', onChange: this.emailOnChange },
-                      { placeholder: "password", icon: 'camera-18', onChange: this.passwordOnChange },
+                      { placeholder: "password", icon: 'camera-18', onChange: this.passwordOnChange, secureTextEntry:true },
                     ]
                   )
                 }
@@ -129,24 +131,25 @@ export default class LoginScreen extends Component {
       })
     }
   }
-  onLoginPress() {
+  async onLoginPress () {
     const data = {
       email: this.state.email,
       password: this.state.password
     }
-    Axios.post('https://smartcheckoutbackend.herokuapp.com/api/user/login', data)
-      .then(res => {
-        this.props.navigation.navigate('Profile', {
-          user: res.data.data,
-          token: res.data.token,
-        });
-      })
-      .catch(error => {
+    const res = await Axios.post('https://smartcheckoutbackend.herokuapp.com/api/user/login', data)
+  
+      if (res.error) {
         const err = error.response.data.message || error.response.data.msg
         console.log(err);
         this.setState({ error: err });
         alert(this.state.error)
-      });
+      }
+
+      // console.log(res)
+      await AsyncStorage.setItem('user', JSON.stringify(res.data.data));
+      await AsyncStorage.setItem('token', res.data.token);
+      console.log('Gonna navigate yaay')
+      this.props.navigation.navigate('Drawer');
   }
 
 }

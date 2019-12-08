@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Button, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Button, ScrollView, AsyncStorage } from 'react-native';
 import {
   Card,
 } from 'react-native-elements';
@@ -23,10 +23,15 @@ export default class Barcode extends React.Component {
 
   async componentDidMount() {
     this.getPermissionsAsync();
+    const stringUser = await AsyncStorage.getItem('user')
+    const user = JSON.parse(stringUser)
+    const token = await AsyncStorage.getItem('token')
+    const storeId = await AsyncStorage.getItem('storeId')
+
     this.setState({
-      user:this.props.navigation.state.params.user,
-      token:this.props.navigation.state.params.token,
-      storeId:this.props.navigation.state.params.storeId
+      user,
+      token,
+      storeId,
     });
   }
 
@@ -90,9 +95,10 @@ export default class Barcode extends React.Component {
     );
   }
 
-  handleBarCodeScanned = ({ type, data }) => {
+  handleBarCodeScanned = async ({ type, data }) => {
+    const storeId = await AsyncStorage.getItem('storeId')
     //alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    Axios.get(`https://smartcheckoutbackend.herokuapp.com/api/store/${this.props.navigation.state.params.storeId}/items/${data}`)
+    Axios.get(`https://smartcheckoutbackend.herokuapp.com/api/store/${storeId}/items/${data}`)
     .then(res=>{
       this.setState({
         item:res.data.data
