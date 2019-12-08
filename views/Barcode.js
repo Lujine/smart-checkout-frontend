@@ -186,6 +186,7 @@ export default class Barcode extends React.Component {
       else{
         this.setState({userVis:true})
       }
+      console.log("scanned item ",res.data.data.name)
     })
     .catch(error=>{
       const err= error.response.data.message||error.response.data.msg
