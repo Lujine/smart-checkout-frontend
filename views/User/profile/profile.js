@@ -9,8 +9,9 @@ import {
   View,
 } from "react-native";
 import { Card } from "galio-framework";
-import { ListItem } from "react-native-elements";
 import Axios from "axios";
+import Modal, { ModalContent, SlideAnimation } from 'react-native-modals';
+
 
 export default class Profile extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -44,7 +45,9 @@ export default class Profile extends React.Component {
       activeSlide: 0,
       navigate: null,
       user: {},
-      loaded: false
+      loaded: false,
+      modalText:"",
+      modalVis:false,
     };
   }
 
@@ -62,6 +65,43 @@ export default class Profile extends React.Component {
     if (loaded) {
       return (
         <ScrollView style={styles.container}>
+          <Modal
+            visible={this.state.modalVis}
+            modalAnimation={new SlideAnimation({
+              slideFrom: 'top',
+            })}
+            onTouchOutside={() => {
+              this.setState({ visible: false });
+            }}
+          >
+            <ModalContent>
+              <Text>{this.state.modalText}</Text>
+              
+              <Button title={"Proceed"}
+                onPress={() => {
+                  Axios.delete(`https://smartcheckoutbackend.herokuapp.com/api/user/${user._id}/cart`)
+                  .then(res => {
+                    console.log(res.data.data)
+                  })
+                  .catch(error => {
+                    console.log(error)
+                    const err = error.response.data.message || error.response.data.msg
+                    console.log(err);
+                    this.setState({ error: err });
+                    alert(this.state.error)
+                  })
+                }
+                }
+              />
+              <Button title="Cancel"
+                buttonStyle={styles.cancelButton}
+                onPress={() => {
+                  this.setState({ modalVis: false })
+                }
+                }
+              />
+            </ModalContent>
+          </Modal>
           <Text style={styles.title}>
             Hello {user.name.first} {user.name.last}
           </Text>
@@ -109,22 +149,22 @@ export default class Profile extends React.Component {
                   //toDo call route calculate total price
                 }}
               />
+               <Button
+                title="checkout cart"
+                onPress={() => {
+                  this.setState({
+                    modalText:"are you sure you're done shopping? it's going to charge you then delete your cart",
+                    modalVis:true
+                  })
+                }}
+              />
               <Button
                 title="delete cart"
                 onPress={() => {
-                  Axios.delete(`https://smartcheckoutbackend.herokuapp.com/api/user/${user._id}/cart`)
-                    .then(res => {
-                      console.log(res.data.data)
-                      alert("deleted Cart Succesfully")
-                    })
-                    .catch(error => {
-                      console.log(error)
-                      const err = error.response.data.message || error.response.data.msg
-                      console.log(err);
-                      this.setState({ error: err });
-                      alert(this.state.error)
-                    })
-
+                  this.setState({
+                    modalText:"are you sure you want to delete your cart?",
+                    modalVis:true
+                  })
                 }}
               />
 

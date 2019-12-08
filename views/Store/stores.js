@@ -13,6 +13,7 @@ import {
     ListItem,
 } from 'react-native-elements'
 import Axios from "axios";
+import Modal, { ModalContent, SlideAnimation } from 'react-native-modals';
 
 export default class Stores extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -49,7 +50,9 @@ export default class Stores extends React.Component {
       storeId:"",
       chosen:false,
       store:{},
-      user:{}
+      user:{},
+      modalVis:false,
+      modalText:"",
 
     };
   }
@@ -88,7 +91,6 @@ export default class Stores extends React.Component {
                   roundAvatar
                   title={store.name}
                   onPress={()=>{
-                    console.log(store)
                       Axios.get(`https://smartcheckoutbackend.herokuapp.com/api/store/${store._id}`)
                       .then(res=>{
                             this.setState({store:res.data.data})
@@ -114,6 +116,49 @@ export default class Stores extends React.Component {
      const {user} = this.state;
       return (
         <ScrollView style={styles.container}>
+          <Modal
+            visible={this.state.modalVis}
+            modalAnimation={new SlideAnimation({
+              slideFrom: 'top',
+            })}
+            onTouchOutside={() => {
+              this.setState({ visible: false });
+            }}
+          >
+            <ModalContent>
+              <Text>{this.state.modalText}</Text>
+              
+              <Button title={"Proceed"}
+                onPress={() => {
+                  Axios.delete(`https://smartcheckoutbackend.herokuapp.com/api/user/${user._id}/cart`)
+                  .then(res => {
+                    console.log(res)
+                    alert('deleted your cart succesfuly loading store now')
+                    AsyncStorage.setItem('storeId', this.state.store._id)
+                    .then(_=>{
+                      this.setState({modalVis:false})
+                      this.props.navigation.navigate("Barcode")
+                    })
+                  })
+                  .catch(error => {
+                    console.log(error)
+                    const err = error.response.data.message || error.response.data.msg
+                    console.log(err);
+                    this.setState({ error: err });
+                    alert(this.state.error)
+                  })
+                }
+                }
+              />
+              <Button title="Cancel"
+                buttonStyle={styles.cancelButton}
+                onPress={() => {
+                  this.setState({ modalVis: false })
+                }
+                }
+              />
+            </ModalContent>
+          </Modal>
              <Card containerStyle={{padding: 0}} >
                     <Text>Name: {this.state.store.name}</Text>
                     <Text>Address: {this.state.store.address}</Text>
@@ -128,7 +173,10 @@ export default class Stores extends React.Component {
                         }
                         else
                         {
-                          alert("the store you're going to shop from is different than your current cart, doing this will delete your cart")
+                          this.setState({
+                            modalText:"the store you're going to shop from is different than your current cart, doing this will delete your cart",
+                            modalVis:true
+                          })
                         }  
 
                   }}/>

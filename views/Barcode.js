@@ -177,6 +177,11 @@ export default class Barcode extends React.Component {
           {scanned && (
             <Button title={'Tap to Scan Again'} onPress={() => this.setState({ scanned: false })} />
           )}
+
+          <Button title="proceed to checkout" onPress={() => {
+            console.log("checkout me out nowww")
+            this.props.navigation.navigate('Profile')
+        }} />
         </View>
       );
     }
