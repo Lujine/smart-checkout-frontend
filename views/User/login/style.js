@@ -1,8 +1,14 @@
-const React = require("react-native");
+import {
+  StyleSheet,
+  Dimensions
+} from 'react-native';
+import { theme } from 'galio-framework';
 
-const { StyleSheet } = React;
+const { width } = Dimensions.get('screen');
 
-export default {
+const thumbMeasure = (width - 48 - 32) / 3;
+
+export default StyleSheet.create({
 
 containerView: {
   flex: 1,
@@ -51,4 +57,24 @@ fbLoginButton: {
   marginTop: 10,
   backgroundColor: 'transparent',
 },
-};
+components: {
+},
+title: {
+  paddingVertical: theme.SIZES.BASE,
+  paddingHorizontal: theme.SIZES.BASE * 2,
+},
+group: {
+  paddingTop: theme.SIZES.BASE * 3.75,
+},
+shadow: {
+  shadowColor: 'black',
+  shadowOffset: { width: 0, height: 2 },
+  shadowRadius: 4,
+  shadowOpacity: 0.2,
+  elevation: 2,
+},
+button: {
+  marginBottom: theme.SIZES.BASE,
+  width: width - (theme.SIZES.BASE * 2),
+},
+});
