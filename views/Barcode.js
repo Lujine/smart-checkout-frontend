@@ -24,9 +24,9 @@ export default class Barcode extends React.Component {
     itemDiscount: 0,
     loading: true
   };
-  static navigationOptions = {
-    title: "CashMeOutside",
-  };
+  // static navigationOptions = {
+  //   title: "CashMeOutside",
+  // };
 
   async componentDidMount() {
     this.getPermissionsAsync();

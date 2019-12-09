@@ -13,25 +13,24 @@ export default class Welcome extends React.Component {
 
         return (
             <Block flex style={styles.container}>
-                {/* <StatusBar barStyle="light-content" /> */}
                 <Block flex center>
                     <ImageBackground
-                        source={require('../assets/images/shopping.jpg')}
+                        source={require('../assets/images/shopping2.jpg')}
                         style={{ height: height, width: width,  marginTop: '-33%', zIndex: 1 }}
                     />
                 </Block>
 
                 <Block flex space="between" style={styles.padded}>
                     <Block flex space="around" style={{  marginTop: '-15%', zIndex: 2 }}>
-                        <Block>
-                            <Block>
-                                <Text color="white" bold size={60}>Smart</Text>
+                        <Block >
+                            <Block >
+                                <Text center color="white" bold size={60}>Smart</Text>
                             </Block>
-                            <Block row>
-                                <Text color="white" bold size={60}>Checkout</Text>
+                            <Block >
+                                <Text center color="white" bold size={60}>Checkout</Text>
                             </Block>
                         </Block>
-                        <Block center>
+                        <Block space="around" center>
                             <Text size={20} muted>
                                 Forget about long queues
                             </Text>
@@ -39,7 +38,8 @@ export default class Welcome extends React.Component {
                                 shadowless
                                 style={styles.button}
                                 color={materialTheme.COLORS.SUCCESS}
-                                onPress={() => navigation.navigate('LogIn')}>
+                                // onPress={() => navigation.navigate('LogIn')}>
+                                onPress={() => navigation.navigate('AuthLoading')}>
                                 GET STARTED
                             </Button>
                         </Block>

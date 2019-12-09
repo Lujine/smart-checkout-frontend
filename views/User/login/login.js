@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   ScrollView,
-  StyleSheet,
   TouchableOpacity,
   Image,
   ImageBackground,
@@ -46,7 +45,6 @@ export default class LoginScreen extends Component {
   renderInputs = (info) => {
     return (
       <Block flex style={styles.group}>
-        {/* <Text bold size={16} style={styles.title}>Log in</Text> */}
         <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
           {
             info.map((inputInfo, index) => (
@@ -54,8 +52,9 @@ export default class LoginScreen extends Component {
                 right
                 placeholder={inputInfo.placeholder}
                 key={index}
+                color='black'
                 placeholderTextColor={materialTheme.COLORS.DEFAULT}
-                style={{ borderRadius: 3, borderColor: materialTheme.COLORS.INPUT }}
+                style={{ borderRadius: 3, borderColor: materialTheme.COLORS.PRIMARY }}
                 iconContent={<Icon size={16} color={theme.COLORS.ICON} name={inputInfo.icon} family={inputInfo.family} />}
                 onChange={inputInfo.onChange}
                 secureTextEntry={inputInfo.secureTextEntry || false}
@@ -77,15 +76,27 @@ export default class LoginScreen extends Component {
         <KeyboardAvoidingView style={styles.containerView} behavior="padding">
 
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <ScrollView style={styles.components}
-              showsVerticalScrollIndicator={false}>
-                <Text bold size={16} style={styles.logoText}>Log In</Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <Block center>
+                  <Text 
+                    center 
+                    bold
+                    size={30} 
+                    style={{ marginTop: '10%' }}
+                  >
+                    Welcome Back
+                  </Text>
+                  <Image
+                    source={require('../../../assets/images/login.png')}
+                    style={{ height: 50, width: 50 }} 
+                  />
+                </Block>
 
                 {
                   this.renderInputs(
                     [
-                      { placeholder: "email", icon: 'email', family:'Fontisto', onChange: this.emailOnChange },
-                      { placeholder: "password", icon: 'eye-slash', family:'font-awesome', onChange: this.passwordOnChange, secureTextEntry:true },
+                      { placeholder: "Email Address", icon: 'email', family:'Fontisto', onChange: this.emailOnChange },
+                      { placeholder: "Password", icon: 'eye-slash', family:'font-awesome', onChange: this.passwordOnChange, secureTextEntry:true },
                     ]
                   )
                 }
@@ -101,15 +112,16 @@ export default class LoginScreen extends Component {
                     >
                       Login
                     </Button>
-                    <Button
+                    <Text
+                      center
                       shadowless
-                      color={materialTheme.COLORS.PRIMARY}
+                      color='black'
                       style={[styles.button, styles.shadow]}
                       onPress={() => this.props.navigation.navigate('Register')}
-                      title="Register"
+                      style={{  textDecorationLine: 'underline' }}
                     >
-                      Register
-                    </ Button>
+                      Don't have an account? Register Now
+                    </ Text>
                   </Block>
                 </Block>
 
@@ -142,7 +154,7 @@ export default class LoginScreen extends Component {
       const res = await Axios.post('https://smartcheckoutbackend.herokuapp.com/api/user/login', data)
       await AsyncStorage.setItem('user', JSON.stringify(res.data.data));
       await AsyncStorage.setItem('token', res.data.token);
-      console.log('Gonna navigate yaay')
+      // console.log('Gonna navigate yaay')
       this.props.navigation.navigate('Drawer');
    
     }

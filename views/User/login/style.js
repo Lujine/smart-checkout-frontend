@@ -57,8 +57,6 @@ fbLoginButton: {
   marginTop: 10,
   backgroundColor: 'transparent',
 },
-components: {
-},
 title: {
   paddingVertical: theme.SIZES.BASE,
   paddingHorizontal: theme.SIZES.BASE * 2,

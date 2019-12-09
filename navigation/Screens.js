@@ -4,6 +4,8 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { Block, Text, theme } from "galio-framework";
+
+import AuthLaoding from './AuthLoading'
 import Barcode from '../views/Barcode';
 import Welcome from '../views/Welcome';
 import Login from '../views/User/login/login'
@@ -58,6 +60,9 @@ const HomeStack = createStackNavigator({
       headerTransparent: true,
     })
   },
+  AuthLoading: {
+    screen: AuthLaoding
+  },
   LogIn: {
     screen: Login,
     navigationOptions: ({ navigation }) => ({
@@ -103,10 +108,6 @@ const DrawerStack = createDrawerNavigator({
         headerTransparent: true,
       })
     },
-  },
-  {
-    cardStyle: { backgroundColor: '#EEEEEE', },
-    transitionConfig,
   },
   Menu
 );

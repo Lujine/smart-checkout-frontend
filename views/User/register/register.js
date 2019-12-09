@@ -57,7 +57,6 @@ export default class RegisterScreen extends Component {
   renderInputs = (info) => {
     return (
       <Block flex style={styles.group}>
-        {/* <Text bold size={16} style={styles.title}>Log in</Text> */}
         <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
           {
             info.map((inputInfo, index) => (
@@ -65,9 +64,10 @@ export default class RegisterScreen extends Component {
                 right
                 placeholder={inputInfo.placeholder}
                 key={index}
+                color='black'
                 placeholderTextColor={materialTheme.COLORS.DEFAULT}
-                style={{ borderRadius: 3, borderColor: materialTheme.COLORS.INPUT }}
-                iconContent={<Icon size={16} color={theme.COLORS.ICON} name={inputInfo.icon} family="GalioExtra" />}
+                style={{ borderRadius: 3, borderColor: materialTheme.COLORS.PRIMARY }}
+                iconContent={<Icon size={16} color={theme.COLORS.ICON} name={inputInfo.icon} family={inputInfo.family} />}
                 onChange={inputInfo.onChange}
                 secureTextEntry={inputInfo.secureTextEntry || false}
               />
@@ -82,48 +82,56 @@ export default class RegisterScreen extends Component {
     return (
       <Block flex center>
 
-        <ScrollView style={styles.components}
-          showsVerticalScrollIndicator={false}
-        >
-          <KeyboardAvoidingView style={styles.containerView} behavior="padding">
+        <KeyboardAvoidingView style={styles.containerView} behavior="padding">
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <ScrollView style={styles.components}
+              showsVerticalScrollIndicator={false}
+            >
 
-            <Text style={styles.logoText}>Register</Text>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <View style={styles.loginFormView}>
-
-                {
-                  this.renderInputs(
-                    [
-                      { placeholder: "firstName", onChange: this.firstNameOnChange },
-                      { placeholder: "lastName", onChange: this.lastNameOnChange },
-                      { placeholder: "email", onChange: this.emailOnChange },
-                      { placeholder: "age", onChange: this.ageOnChange },
-                      { placeholder: "birthdate", onChange: this.dateOnChange },
-                      { placeholder: "password", onChange: this.passOnChange, secureTextEntry:true },
-                    ]
-                  )
-                }
-                {/*
-              <TextInput 
-              placeholder="Password" placeholderColor="#c4c3cb" 
-              style={styles.loginFormTextInput} secureTextEntry={true}
-              onChange={(e)=>this.OnInput(e,"pass")}
-              /> 
-              */}
-                <Button
-                  shadowless
-                  color={materialTheme.COLORS.PRIMARY}
-                  style={[styles.button, styles.shadow]}
-                  buttonStyle={styles.loginButton}
-                  onPress={() => this.onPress()}
-                  title="Submit"
+              <Block center>
+                <Text 
+                  center 
+                  bold
+                  size={30} 
+                  style={{ marginTop: '10%' }}
                 >
-                  Submit
-              </Button>
-              </View>
-            </TouchableWithoutFeedback>
-          </KeyboardAvoidingView>
-        </ScrollView>
+                  Join Us Now
+                </Text>
+                <Image
+                  source={require('../../../assets/images/register.png')}
+                  style={{ height: 50, width: 50 }}
+                />
+              </Block>
+
+              {
+                this.renderInputs(
+                  [
+                    { placeholder: "First Name", icon: 'person', family: 'Fontisto', onChange: this.firstNameOnChange },
+                    { placeholder: "Last Name", icon: 'person', family: 'Fontisto', onChange: this.lastNameOnChange },
+                    { placeholder: "Email", icon: 'email', family: 'Fontisto', onChange: this.emailOnChange },
+                    { placeholder: "Password", icon: 'eye-slash', family: 'font-awesome', onChange: this.passOnChange, secureTextEntry: true },
+                    { placeholder: "Age", icon: 'date-range', family: 'MaterialIcons', onChange: this.ageOnChange },
+                    { placeholder: "Birth date", icon: 'date-range', family: 'MaterialIcons', onChange: this.dateOnChange },
+                  ]
+                )
+              }
+              <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
+                <Block center>
+                  <Button
+                    shadowless
+                    color={materialTheme.COLORS.PRIMARY}
+                    style={[styles.button, styles.shadow]}
+                    buttonStyle={styles.loginButton}
+                    onPress={() => this.onPress()}
+                  >
+                    Register
+                </Button>
+                </Block>
+              </Block>
+
+            </ScrollView>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Block>
     );
   }
