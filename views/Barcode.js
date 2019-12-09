@@ -1,38 +1,47 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Button, ScrollView, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, AsyncStorage, TextInput } from 'react-native';
 import {
   Card,
 } from 'react-native-elements';
+import { Button } from 'galio-framework'
 import * as Permissions from 'expo-permissions';
-import Modal, { ModalContent,SlideAnimation } from 'react-native-modals';
+import Modal, { ModalContent, SlideAnimation } from 'react-native-modals';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Axios from 'axios';
 import styles from "./style";
+import materialTheme from '../constants/Theme'
 
 export default class Barcode extends React.Component {
   state = {
     hasCameraPermission: null,
     scanned: false,
-    user:null,
-    token:null,
-    storeId:"",
-    item:{},
-    adminVis:false,
-    userVis:false,
-    itemName:"",
-    itemPrice:0,
-    itemDiscount:0
+    user: {},
+    token: "",
+    storeId: "",
+    item: {},
+    adminVis: false,
+    userVis: false,
+    itemName: "",
+    itemPrice: 0,
+    itemDiscount: 0,
+    loading: true
   };
-  static navigationOptions = {
-    title: "CashMeOutside",
-  };
+  // static navigationOptions = {
+  //   title: "CashMeOutside",
+  // };
 
   async componentDidMount() {
     this.getPermissionsAsync();
+    const stringUser = await AsyncStorage.getItem('user')
+    const user = JSON.parse(stringUser)
+    const token = await AsyncStorage.getItem('token')
+    const storeId = await AsyncStorage.getItem('storeId')
+
     this.setState({
-      user:this.props.navigation.state.params.user,
-      token:this.props.navigation.state.params.token,
-      storeId:this.props.navigation.state.params.storeId
+      user,
+      token,
+      storeId,
+      loading: false
     });
   }
 
@@ -40,11 +49,9 @@ export default class Barcode extends React.Component {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   };
-  
+
   render() {
-    const userId=this.props.navigation.state.params.user._id;
-   
-    const { hasCameraPermission, scanned } = this.state;
+    const { hasCameraPermission, scanned, user } = this.state;
 
     if (hasCameraPermission === null) {
       return <Text>Requesting for camera permission</Text>;
@@ -52,149 +59,184 @@ export default class Barcode extends React.Component {
     if (hasCameraPermission === false) {
       return <Text>No access to camera</Text>;
     }
-    return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-        }}>
-        
-        <Text>Scan the barcode of the item you want!</Text>
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
-          style={StyleSheet.absoluteFillObject}
-        />
-        <Modal
-        visible={this.state.adminVis}
-        modalAnimation={new SlideAnimation({
-          slideFrom: 'top',
-        })}
-        onTouchOutside={() => {
-          this.setState({ visible: false });
-        }}
-        >  
-        <ModalContent style={styles.modalstyle}>
-        <TextInput
-             placeholder="Item Name" placeholderColor="#c4c3cb"
-              onChange={(e)=>{
-                this.setState({
-                  itemName:e.nativeEvent.text
-                })
-              }} 
-            />
-            <TextInput
-             placeholder="price" placeholderColor="#c4c3cb"
-              style={styles.loginFormTextInput}
-              onChange={(e)=>{
-                this.setState({
-                  ItemPrice:e.nativeEvent.text
-                })
-              }} 
-            />
-            <TextInput
-            placeholder="discount" placeholderColor="#c4c3cb"
-            style={styles.loginFormTextInput}
-            onChange={(e)=>{
-              this.setState({
-                itemDiscount:e.nativeEvent.text
-              })
-            }} 
-            />
 
-            <Button title="submit"
-            onPress={()=>{
-               Axios.post(`https://smartcheckoutbackend.herokuapp.com/api/store/${this.state.storeId}/items`, {
-                 name:this.state.itemName,
-                 price:this.state.ItemPrice,
-                 discount:this.state.itemDiscount,
-                 barcode:123456789101,
-               })
-                      .then(res=>{
-                        console.log(res.data.data)
-                        alert("added to Store!")
-                      })
-                      .catch(error=>{
-                        const err= error.response.data.message||error.response.data.msg
-                        console.log(err);
-                        this.setState({error:err});
-                        alert(this.state.error)
-                      })
+    if (!this.state.loading) {
+      const userId = user._id;
+
+      return (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
+          }}>
+
+          <Text>Scan the barcode of the item you want!</Text>
+          <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
+            style={StyleSheet.absoluteFillObject}
+          />
+          <Modal
+            visible={this.state.adminVis}
+            modalAnimation={new SlideAnimation({
+              slideFrom: 'top',
+            })}
+            onTouchOutside={() => {
+              this.setState({ visible: false });
             }}
-            />
-        </ModalContent>
+          >
+            <ModalContent style={styles.modalstyle}>
+              <TextInput
+                placeholder="Item Name" placeholderColor="#c4c3cb"
+                onChange={(e) => {
+                  this.setState({
+                    itemName: e.nativeEvent.text
+                  })
+                }}
+              />
+              <TextInput
+                placeholder="price" placeholderColor="#c4c3cb"
+                style={styles.loginFormTextInput}
+                onChange={(e) => {
+                  this.setState({
+                    ItemPrice: e.nativeEvent.text
+                  })
+                }}
+              />
+              <TextInput
+                placeholder="discount" placeholderColor="#c4c3cb"
+                style={styles.loginFormTextInput}
+                onChange={(e) => {
+                  this.setState({
+                    itemDiscount: e.nativeEvent.text
+                  })
+                }}
+              />
 
-      </Modal>
-      <Modal
-        visible={this.state.userVis}
-        modalAnimation={new SlideAnimation({
-          slideFrom: 'top',
-        })}
-        onTouchOutside={() => {
-          this.setState({ visible: false });
-        }}
-        >  
-        <ModalContent>
-                  <Text>Name: {this.state.item.name}</Text>
-                    <Text>Price: {this.state.item.price}</Text>
-                    <Text>Discount : {this.state.item.discount}</Text>
-                   <Button title={"Add to Cart"} 
-                    onPress={()=>{
-                      //toDo call route to add to cart
-                      Axios.post(`https://smartcheckoutbackend.herokuapp.com/api/user/${userId}/cart/item`, this.state.item)
-                      .then(res=>{
-                        console.log(res.data.data)
-                        alert("added to cart!") 
-                      })
-                      .catch(error=>{
-                        console.log(error)
-                        const err= error.response.data.message||error.response.data.msg
-                        console.log(err);
-                        this.setState({error:err});
-                        alert(this.state.error)
-                      })
-                  }
+              <Button
+                onPress={() => {
+                  Axios.post(`https://smartcheckoutbackend.herokuapp.com/api/store/${this.state.storeId}/items`, {
+                    name: this.state.itemName,
+                    price: this.state.ItemPrice,
+                    discount: this.state.itemDiscount,
+                    barcode: 123456789101,
+                  })
+                    .then(res => {
+                      console.log(res.data.data)
+                      alert("added to Store!")
+                    })
+                    .catch(error => {
+                      const err = error.response.data.message || error.response.data.msg
+                      console.log(err);
+                      this.setState({ error: err });
+                      alert(this.state.error)
+                    })
+                }}
+              >
+                Submit
+              </Button>
+            </ModalContent>
+
+          </Modal>
+          <Modal
+            visible={this.state.userVis}
+            modalAnimation={new SlideAnimation({
+              slideFrom: 'top',
+            })}
+            onTouchOutside={() => {
+              this.setState({ visible: false });
+            }}
+          >
+            <ModalContent>
+              <Text>Name: {this.state.item.name}</Text>
+              <Text>Price: {this.state.item.price}</Text>
+              <Text>Discount : {this.state.item.discount}</Text>
+              <Button
+                color={materialTheme.COLORS.SUCCESS}
+                onPress={() => {
+                  //toDo call route to add to cart
+                  Axios.post(`https://smartcheckoutbackend.herokuapp.com/api/user/${userId}/cart/item`, this.state.item)
+                    .then(res => {
+                      console.log(res.data.data)
+                      alert("added to cart!")
+                    })
+                    .catch(error => {
+                      console.log(error)
+                      const err = error.response.data.message || error.response.data.msg
+                      console.log(err);
+                      this.setState({ error: err });
+                      alert(this.state.error)
+                    })
                 }
-                    />
-                    <Button title="Cancel"
-                    buttonStyle={styles.cancelButton}
-                    onPress={()=>{
-                      this.setState({userVis:false})
-                  }
                 }
-                    />
-        </ModalContent>
-      </Modal>
-        {scanned && (
-          <Button title={'Tap to Scan Again'} onPress={() => this.setState({ scanned: false })} />
-        )}
-      </View>
-    );
+              >
+                Add to Cart"
+              </Button>
+              <Button
+                color={materialTheme.COLORS.WARNING}
+                onPress={() => this.setState({ userVis: false })}
+              >
+                Cancel
+              </Button>
+            </ModalContent>
+          </Modal>
+          {scanned && (
+            <Button onPress={() => this.setState({ scanned: false })} >
+              Tap to Scan Again
+            </Button>
+          )}
+
+          <Button onPress={() => {
+            console.log("checkout me out nowww")
+            Axios.get(`https://smartcheckoutbackend.herokuapp.com/api/user/${this.state.user._id}`)
+            .then(res=>{
+              AsyncStorage.setItem('user', JSON.stringify(res.data.data))
+              .then(_=>{
+                this.props.navigation.navigate('Profile')
+              })
+            })
+            .catch(error=>{
+              const err = error.response.data.message || error.response.data.msg
+              console.log(err);
+              this.setState({ error: err });
+              alert(this.state.error)
+            })
+          }} >
+            Proceed to checkout
+          </Button>
+        </View>
+      );
+    }
+    return (
+
+      <Text>Loading</Text>
+    )
   }
 
-  handleBarCodeScanned = ({ type, data }) => {
+  handleBarCodeScanned = async ({ type, data }) => {
+    const storeId = await AsyncStorage.getItem('storeId')
     //alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    Axios.get(`https://smartcheckoutbackend.herokuapp.com/api/store/${this.props.navigation.state.params.storeId}/items/${data}`)
-    .then(res=>{
-      this.setState({
-        item:res.data.data
+    console.log(data)
+    Axios.get(`https://smartcheckoutbackend.herokuapp.com/api/store/${storeId}/items/${data}`)
+      .then(res => {
+        this.setState({
+          item: res.data.data
+        })
+        this.setState({ scanned: true });
+        if (this.state.user.isAdmin)
+          this.setState({ adminVis: true })
+        else {
+          this.setState({ userVis: true })
+        }
+        console.log("scanned item ", res.data.data.name)
       })
-      this.setState({ scanned: true });
-      const user=this.props.navigation.state.params.user;
-      if(user.isAdmin)
-        this.setState({adminVis:true})
-      else{
-        this.setState({userVis:true})
-      }
-      console.log("scanned item ",res.data.data.name)
-    })
-    .catch(error=>{
-      const err= error.response.data.message||error.response.data.msg
-      console.log(err);
-      this.setState({error:err});
-      alert(this.state.error)
-    })
-   
+      .catch(error => {
+        const err = error.response.data.message || error.response.data.msg
+        console.log(err);
+        this.setState({ error: err });
+        alert(this.state.error)
+      })
+
   };
 }
 

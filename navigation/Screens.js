@@ -1,20 +1,17 @@
 import React from 'react';
 import { Easing, Animated, Platform } from 'react-native';
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator} from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { Block, Text, theme } from "galio-framework";
+
+import AuthLaoding from './AuthLoading'
 import Barcode from '../views/Barcode';
+import Welcome from '../views/Welcome';
 import Login from '../views/User/login/login'
 import Register from '../views/User/register/register'
 import Profile from '../views/User/profile/profile'
 import Store from '../views/Store/stores'
-// import ComponentsScreen from '../screens/Components';
-// import HomeScreen from '../screens/Home';
-// import OnboardingScreen from '../screens/Onboarding';
-// import ProfileScreen from '../screens/Profile';
-// import ProScreen from '../screens/Pro';
-// import SettingsScreen from '../screens/Settings';
 
 import Menu from './Menu';
 import Header from '../components/Header';
@@ -56,226 +53,72 @@ const transitionConfig = (transitionProps, prevTransitionProps) => ({
 })
 
 const HomeStack = createStackNavigator({
+  Welcome: {
+    screen: Welcome,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header transparent title="Welcome" navigation={navigation} />,
+      headerTransparent: true,
+    })
+  },
+  AuthLoading: {
+    screen: AuthLaoding
+  },
   LogIn: {
     screen: Login,
     navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
-      headerTransparent: true,
+      header: <Header back transparent title="Log In" icon="arrow-back" family='MaterialIcons' navigation={navigation} />,
+      // headerTransparent: true,
     })
   },
   Register: {
     screen: Register,
     navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
+      header: <Header back transparent title="Register" icon="arrow-back" family='MaterialIcons' navigation={navigation} />,
       headerTransparent: true,
     }) 
   },
-  Profile:{
-    screen: Profile,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
-      headerTransparent: true,
-    }),
-  },
-  Stores:{
-    screen: Store,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
-      headerTransparent: true,
-    }),
-  },
-  Barcode:{
-    screen: Barcode,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Scan your Item" navigation={navigation} />,
-      headerTransparent: true,
-    }),
-  },
-
 }, 
 {
-  initialRouteName: 'LogIn',
+  initialRouteName: 'Welcome',
 },
 {
   cardStyle: { backgroundColor: '#EEEEEE', },
   transitionConfig,
 });
 
-const RegisterStack = createStackNavigator({
-  Register: {
-    screen: Register,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
-      headerTransparent: true,
-    })
-  },
-  LogIn: {
-    screen: Login,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
-      headerTransparent: true,
-    })
-  },
-}, {
-  cardStyle: { backgroundColor: '#EEEEEE', },
-  transitionConfig,
-});
-
-const BarcodeStack = createStackNavigator({
-  Barcode: {
-    screen: Barcode,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Scan your Barcode" navigation={navigation} />,
-      headerTransparent: true,
-    })
-  },
-  LogIn: {
-    screen: Login,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Smart Checkout" navigation={navigation} />,
-      headerTransparent: true,
-    })
-  }
-}, {
-  cardStyle: { backgroundColor: '#EEEEEE', },
-  transitionConfig,
-});
-
-const ProfileStack = createStackNavigator({
-  Profile: {
-    screen: Profile,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Profile" navigation={navigation} />,
-      headerTransparent: true,
-    })
-  },
-}, {
-  cardStyle: { backgroundColor: '#EEEEEE', },
-  transitionConfig,
-});
-
-// const SettingsStack = createStackNavigator({
-//   Settings: {
-//     screen: SettingsScreen,
-//     navigationOptions: ({ navigation }) => ({
-//       header: <Header title="Settings" navigation={navigation} />,
-//     })
-//   },
-// }, {
-//   cardStyle: { backgroundColor: '#EEEEEE', },
-//   transitionConfig,
-// });
-
-// const ComponentsStack = createStackNavigator({
-//   Components: {
-//     screen: ComponentsScreen,
-//     navigationOptions: ({ navigation }) => ({
-//       header: <Header title="Components" navigation={navigation} />,
-//     })
-//   },
-// }, {
-//   cardStyle: { backgroundColor: '#EEEEEE', },
-//   transitionConfig,
-// });
-
-// const HomeStack = createStackNavigator({
-//   Home: {
-//     screen: HomeScreen,
-//     navigationOptions: ({navigation}) => ({
-//       header: <Header search tabs title="Home" navigation={navigation} />,
-//     })
-//   },
-//   Pro: {
-//     screen: ProScreen,
-//     navigationOptions: ({navigation}) => ({
-//       header: <Header back white transparent title="" navigation={navigation} />,
-//       headerTransparent: true,
-//     })
-//   },
-// },
-// {
-//   cardStyle: { 
-//     backgroundColor: '#EEEEEE', //this is the backgroundColor for the app
-//   },
-//   transitionConfig,
-// });
-
-const AppStack = createDrawerNavigator(
-  {
-    Home: {
-      screen: HomeStack,
-      navigationOptions: {
-        drawerLabel: ({focused}) => (
-          <Drawer focused={focused} screen="Login" title="Login" />
-        )
-      }
+const DrawerStack = createDrawerNavigator({
+    Profile: {
+      screen: Profile,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header transparent title="Profile" navigation={navigation} />,
+        headerTransparent: true,
+      })
     },
     Barcode: {
-      screen: BarcodeStack,
-      navigationOptions: {
-        drawerLabel: ({focused}) => (
-          <Drawer focused={focused} screen="Barcode" title="Barcode" />
-        )
-      }
+      screen: Barcode,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header transparent title="Scan your Barcode" navigation={navigation} />,
+        headerTransparent: true,
+      })
     },
-    // Register: {
-    //   screen: RegisterStack,
-    //   navigationOptions: {
-    //     drawerLabel: ({focused}) => (
-    //       <Drawer focused={focused} screen="Register" title="Register" />
-    //     )
-    //   }
-    // },
-    // Profile: {
-    //   screen: ProfileStack,
-    //   navigationOptions: {
-    //     drawerLabel: ({focused}) => (
-    //       <Drawer focused={focused} screen="Profile" title="My Profile" />
-    //     )
-    //   }
-    // }
-    // Home: {
-    //   screen: HomeStack,
-    //   navigationOptions: {
-    //     drawerLabel: ({focused}) => (
-    //       <Drawer focused={focused} screen="Home" title="Home" />
-    //     )
-    //   }
-    // },
-    // Profile: {
-    //   screen: ProfileStack,
-    //   navigationOptions: (navOpt) => ({
-    //     drawerLabel: ({focused}) => (
-    //       <Drawer focused={focused} screen="Profile" title="Profile" />
-    //     ),
-    //   }),
-    // },
-    // Settings: {
-    //   screen: SettingsStack,
-    //   navigationOptions: (navOpt) => ({
-    //     drawerLabel: ({focused}) => (
-    //       <Drawer focused={focused} screen="Settings" title="Settings" />
-    //     ),
-    //   }),
-    // },
-    // Components: {
-    //   screen: ComponentsStack,
-    //   navigationOptions: (navOpt) => ({
-    //     drawerLabel: ({focused}) => (
-    //       <Drawer focused={focused} screen="Components" title="Components" />
-    //     ),
-    //   }),
-    // },
-    // MenuDivider: {
-    //   screen: HomeStack,
-    //   navigationOptions: {
-    //     drawerLabel: () => <Block style={{marginVertical: 8}}><Text>{` `}</Text></Block>,
-    //   },
-    // },
-  
+    Store: {
+      screen: Store,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header transparent title="Store" navigation={navigation} />,
+        headerTransparent: true,
+      })
+    },
   },
   Menu
 );
+
+const AppStack = createSwitchNavigator({
+  Home: HomeStack,
+  Drawer: DrawerStack,
+},
+{
+  initialRouteName: 'Home'
+})
 
 const AppContainer = createAppContainer(AppStack);
 export default AppContainer;
