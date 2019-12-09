@@ -9,7 +9,7 @@ import {
 import { Card, Block, Button, Text, Input, theme } from "galio-framework";
 import Axios from "axios";
 import Modal, { ModalContent, SlideAnimation } from 'react-native-modals';
-
+import materialTheme from '../../../constants/Theme'
 
 export default class Profile extends React.Component {
   // static navigationOptions = ({ navigation }) => ({
@@ -52,8 +52,8 @@ export default class Profile extends React.Component {
   async componentDidMount() {
     console.log('here')
     const stringUser = await AsyncStorage.getItem('user')
-    const parsed = JSON.parse(stringUser)
-    const user = parsed
+    const user = JSON.parse(stringUser)
+    console.log(`User ${user}`)
     this.setState({ user: user, loaded: true })
   }
 
@@ -78,6 +78,7 @@ export default class Profile extends React.Component {
                 <Text>{this.state.modalText}</Text>
 
                 <Button
+                  color={materialTheme.COLORS.SUCCESS}
                   onPress={() => {
                     Axios.delete(`https://smartcheckoutbackend.herokuapp.com/api/user/${user._id}/cart`)
                       .then(res => {
@@ -96,7 +97,7 @@ export default class Profile extends React.Component {
                   Proceed
                   </Button>
                 <Button
-                  buttonStyle={styles.cancelButton}
+                   color={materialTheme.COLORS.WARNING}
                   onPress={() => this.setState({ modalVis: false })}
                 >
                   Cancel

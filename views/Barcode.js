@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Button, ScrollView, AsyncStorage, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, AsyncStorage, TextInput } from 'react-native';
 import {
   Card,
 } from 'react-native-elements';
+import { Button } from 'galio-framework'
 import * as Permissions from 'expo-permissions';
 import Modal, { ModalContent, SlideAnimation } from 'react-native-modals';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Axios from 'axios';
 import styles from "./style";
+import materialTheme from '../constants/Theme'
 
 export default class Barcode extends React.Component {
   state = {
@@ -50,7 +52,7 @@ export default class Barcode extends React.Component {
 
   render() {
     const { hasCameraPermission, scanned, user } = this.state;
-    
+
     if (hasCameraPermission === null) {
       return <Text>Requesting for camera permission</Text>;
     }
@@ -58,7 +60,7 @@ export default class Barcode extends React.Component {
       return <Text>No access to camera</Text>;
     }
 
-    if(!this.state.loading) {
+    if (!this.state.loading) {
       const userId = user._id;
 
       return (
@@ -68,7 +70,7 @@ export default class Barcode extends React.Component {
             flexDirection: 'column',
             justifyContent: 'flex-end',
           }}>
-  
+
           <Text>Scan the barcode of the item you want!</Text>
           <BarCodeScanner
             onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
@@ -110,8 +112,8 @@ export default class Barcode extends React.Component {
                   })
                 }}
               />
-  
-              <Button title="submit"
+
+              <Button
                 onPress={() => {
                   Axios.post(`https://smartcheckoutbackend.herokuapp.com/api/store/${this.state.storeId}/items`, {
                     name: this.state.itemName,
@@ -130,9 +132,11 @@ export default class Barcode extends React.Component {
                       alert(this.state.error)
                     })
                 }}
-              />
+              >
+                Submit
+              </Button>
             </ModalContent>
-  
+
           </Modal>
           <Modal
             visible={this.state.userVis}
@@ -147,7 +151,8 @@ export default class Barcode extends React.Component {
               <Text>Name: {this.state.item.name}</Text>
               <Text>Price: {this.state.item.price}</Text>
               <Text>Discount : {this.state.item.discount}</Text>
-              <Button title={"Add to Cart"}
+              <Button
+                color={materialTheme.COLORS.SUCCESS}
                 onPress={() => {
                   //toDo call route to add to cart
                   Axios.post(`https://smartcheckoutbackend.herokuapp.com/api/user/${userId}/cart/item`, this.state.item)
@@ -164,29 +169,34 @@ export default class Barcode extends React.Component {
                     })
                 }
                 }
-              />
-              <Button title="Cancel"
-                buttonStyle={styles.cancelButton}
-                onPress={() => {
-                  this.setState({ userVis: false })
-                }
-                }
-              />
+              >
+                Add to Cart"
+              </Button>
+              <Button
+                color={materialTheme.COLORS.WARNING}
+                onPress={() => this.setState({ userVis: false })}
+              >
+                Cancel
+              </Button>
             </ModalContent>
           </Modal>
           {scanned && (
-            <Button title={'Tap to Scan Again'} onPress={() => this.setState({ scanned: false })} />
+            <Button onPress={() => this.setState({ scanned: false })} >
+              Tap to Scan Again
+            </Button>
           )}
 
-          <Button title="proceed to checkout" onPress={() => {
+          <Button onPress={() => {
             console.log("checkout me out nowww")
             this.props.navigation.navigate('Profile')
-        }} />
+          }} >
+            Proceed to checkout
+          </Button>
         </View>
       );
     }
     return (
-      
+
       <Text>Loading</Text>
     )
   }
