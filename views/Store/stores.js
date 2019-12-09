@@ -142,7 +142,8 @@ export default class Stores extends React.Component {
                     alert('deleted your cart succesfuly loading store now')
                     AsyncStorage.setItem('storeId', this.state.store._id)
                       .then(_ => {
-                        this.setState({ modalVis: false })
+                        this.setState({ modalVis: false})
+                        this.setState({chosen:false,storeId:""})
                         this.props.navigation.navigate("Barcode")
                       })
                   })

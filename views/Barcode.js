@@ -188,7 +188,19 @@ export default class Barcode extends React.Component {
 
           <Button onPress={() => {
             console.log("checkout me out nowww")
-            this.props.navigation.navigate('Profile')
+            Axios.get(`https://smartcheckoutbackend.herokuapp.com/api/user/${this.state.user._id}`)
+            .then(res=>{
+              AsyncStorage.setItem('user', JSON.stringify(res.data.data))
+              .then(_=>{
+                this.props.navigation.navigate('Profile')
+              })
+            })
+            .catch(error=>{
+              const err = error.response.data.message || error.response.data.msg
+              console.log(err);
+              this.setState({ error: err });
+              alert(this.state.error)
+            })
           }} >
             Proceed to checkout
           </Button>
