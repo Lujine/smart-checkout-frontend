@@ -83,6 +83,8 @@ export default class Profile extends React.Component {
                     Axios.delete(`https://smartcheckoutbackend.herokuapp.com/api/user/${user._id}/cart`)
                       .then(res => {
                         console.log(res.data.data)
+                        this.setState({modalVis:false})
+                        alert("successfull!")
                       })
                       .catch(error => {
                         console.log(error)
@@ -159,10 +161,25 @@ export default class Profile extends React.Component {
                 <Button
 
                   onPress={() => {
-                    //toDo call route calculate total price
+                    this.setState({loaded:false})
+                    console.log('refreshing')
+                    Axios.get(`https://smartcheckoutbackend.herokuapp.com/api/user/${this.state.user._id}`)
+                    .then(res=>{
+                      AsyncStorage.setItem('user', JSON.stringify(res.data.data))
+                      .then(_=>{
+                        this.setState({user:res.data.data, loaded:true})
+                        this.props.navigation.navigate('Profile')
+                      })
+                    })
+                    .catch(error=>{
+                      const err = error.response.data.message || error.response.data.msg
+                      console.log(err);
+                      this.setState({ error: err });
+                      alert(this.state.error)
+                    })
                   }}
                 >
-                  Refresh total pric
+                  Refresh cart
               </Button>
                 <Button
 
@@ -194,6 +211,18 @@ export default class Profile extends React.Component {
             </Button>
 
           </ScrollView>
+          <Button onPress={() => {
+            console.log('logging out noww')
+            AsyncStorage.removeItem('user')
+            .then(_=>{
+              AsyncStorage.removeItem('token')
+              .then(_=>{
+                this.props.navigation.navigate("LogIn")
+              })
+            })
+            }} >
+                  LogOut
+            </Button>
         </Block>
       );
     }
