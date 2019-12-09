@@ -5,6 +5,7 @@ import { createStackNavigator} from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer'
 import { Block, Text, theme } from "galio-framework";
 import Barcode from '../views/Barcode';
+import Welcome from '../views/Welcome';
 import Login from '../views/User/login/login'
 import Register from '../views/User/register/register'
 import Profile from '../views/User/profile/profile'
@@ -50,30 +51,30 @@ const transitionConfig = (transitionProps, prevTransitionProps) => ({
 })
 
 const HomeStack = createStackNavigator({
+  Welcome: {
+    screen: Welcome,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header transparent title="Welcome" navigation={navigation} />,
+      headerTransparent: true,
+    })
+  },
   LogIn: {
     screen: Login,
     navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="LogIn" navigation={navigation} />,
-      headerTransparent: true,
+      header: <Header back transparent title="Log In" icon="arrow-back" family='MaterialIcons' navigation={navigation} />,
+      // headerTransparent: true,
     })
   },
   Register: {
     screen: Register,
     navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Register" navigation={navigation} />,
+      header: <Header back transparent title="Register" icon="arrow-back" family='MaterialIcons' navigation={navigation} />,
       headerTransparent: true,
     }) 
   },
-  Profile: {
-    screen: Profile,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header white transparent title="Profile" navigation={navigation} />,
-      headerTransparent: true,
-    })
-  },
 }, 
 {
-  initialRouteName: 'LogIn',
+  initialRouteName: 'Welcome',
 },
 {
   cardStyle: { backgroundColor: '#EEEEEE', },
@@ -84,21 +85,21 @@ const DrawerStack = createDrawerNavigator({
     Profile: {
       screen: Profile,
       navigationOptions: ({ navigation }) => ({
-        header: <Header white transparent title="Profile" navigation={navigation} />,
+        header: <Header transparent title="Profile" navigation={navigation} />,
         headerTransparent: true,
       })
     },
     Barcode: {
       screen: Barcode,
       navigationOptions: ({ navigation }) => ({
-        header: <Header white transparent title="Scan your Barcode" navigation={navigation} />,
+        header: <Header transparent title="Scan your Barcode" navigation={navigation} />,
         headerTransparent: true,
       })
     },
     Store: {
       screen: Store,
       navigationOptions: ({ navigation }) => ({
-        header: <Header white transparent title="Store" navigation={navigation} />,
+        header: <Header transparent title="Store" navigation={navigation} />,
         headerTransparent: true,
       })
     },

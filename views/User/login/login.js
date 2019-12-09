@@ -56,7 +56,7 @@ export default class LoginScreen extends Component {
                 key={index}
                 placeholderTextColor={materialTheme.COLORS.DEFAULT}
                 style={{ borderRadius: 3, borderColor: materialTheme.COLORS.INPUT }}
-                iconContent={<Icon size={16} color={theme.COLORS.ICON} name={inputInfo.icon} family="GalioExtra" />}
+                iconContent={<Icon size={16} color={theme.COLORS.ICON} name={inputInfo.icon} family={inputInfo.family} />}
                 onChange={inputInfo.onChange}
                 secureTextEntry={inputInfo.secureTextEntry || false}
               />
@@ -84,8 +84,8 @@ export default class LoginScreen extends Component {
                 {
                   this.renderInputs(
                     [
-                      { placeholder: "email", icon: 'camera-18', onChange: this.emailOnChange },
-                      { placeholder: "password", icon: 'camera-18', onChange: this.passwordOnChange, secureTextEntry:true },
+                      { placeholder: "email", icon: 'email', family:'Fontisto', onChange: this.emailOnChange },
+                      { placeholder: "password", icon: 'eye-slash', family:'font-awesome', onChange: this.passwordOnChange, secureTextEntry:true },
                     ]
                   )
                 }

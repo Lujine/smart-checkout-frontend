@@ -156,7 +156,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { back, title, white, transparent, navigation } = this.props;
+    const { back, title, white, transparent, icon, family, navigation } = this.props;
     const { routeName } = navigation.state;
     const noShadow = ["Search", "Categories", "Deals", "Pro", "Profile"].includes(routeName);
     const headerStyles = [
@@ -174,7 +174,8 @@ class Header extends React.Component {
           right={this.renderRight()}
           rightStyle={{ alignItems: 'center' }}
           leftStyle={{ flex: 0.3, paddingTop: 2  }}
-          leftIconName="navicon"
+          leftIconName={icon || "navicon"}
+          leftIconFamily={family || "evilicons"}
           leftIconColor={white ? theme.COLORS.WHITE : theme.COLORS.ICON}
           titleStyle={[
             styles.title,
